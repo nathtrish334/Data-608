@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>CUNY : DATA 608 - Module 5</title>
+        <script type="text/javascript"></script>
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+    </head>
+
+    <h1><p style="text-decoration: underline;">Part 1 - Beginner:</p></h1>
+		<h2>1. Reverse A String</h2>
+		    <h3>Please Enter A Word/Sentence And Click GO!</h3>
+				<body>
+					<script type="text/javascript">
+						function reverse(str){
+							var splitString = str.split("");
+							var reverseArray = splitString.reverse();
+							var joinArray = reverseArray.join("");
+							return joinArray;
+						};
+						function reverseAword(){
+								var x = document.getElementById("MyWord");
+								x.innerHTML = reverse(document.getElementById('str').value);
+							}
+					</script>
+					<form name="mystring">
+						<input id="str" type="str" placeholder="Word Here" size="20">
+						<input type="button" value="GO!" onClick="reverseAword();">
+					</form>
+					<br>
+					<div id="MyWord"></div>
+				</body>
+		<br>
+		<h2>2. First Twenty Multiples</h2>
+			<h3>Please Enter A Number And Click G0!:</h3>
+				<body>
+					<script type="text/javascript">
+					function multiple(number){
+						list = [];
+						var finalvalue = '<table border="1">';
+						for (i = 1; i <= 20; i++) {list.push(number * i)};
+						for (i = 0; i < 20; i++){
+							if (i % 4 == 0) { 
+								finalvalue = finalvalue +'<tr>'
+							};
+							finalvalue = finalvalue + '<td>' + list[i] + '</td>';
+							if (i % 4 == 3){
+								finalvalue = finalvalue + '</tr>'};};
+						finalvalue = finalvalue + '</table>';
+						return finalvalue
+					};
+					function display(){
+						var y = document.getElementById("target");
+						y.innerHTML = multiple(document.getElementById('number').value);
+					}
+					</script>
+					<form name="myTable">
+						<input id="number" type="number" placeholder="Number Here" size="4">
+						<input type="button" value="GO!" onClick="display();">
+					</form>
+					<br>
+					<div id="target"></div>
+				</body>
+	<hr>
+	<h1><p style="text-decoration: underline;">Part 2 - Intermediate:</p></h1>
+		<h2>Presidents CSV File</h2>
+			<h3>Enter President Name:</h3>
+				<body>       
+					<form action="." method="GET" id="form" autocomplete="off">
+						<p><input id="search_text" type="text" placeholder="President Name Here" /></p>
+						<div id="presidents_table"></div>
+					</form>
+					<style>
+						table, th, td {
+						  border: 2px solid black;
+						}
+						table {
+							width:50%;
+							cell-padding:"0";
+							cell-spacing:"0";
+							margin:0
+						}
+						td {
+							width:100px;
+						}
+					</style>
+					<script>
+						$(document).ready(function() {
+							var presidents_table_html_start = "<table id='the_presidents_table'><thead><tr><th>President Name </th><th>Height </th><th>Weight </th><th>BMI </th></tr></thead>";    
+							function update_president_table(search, search_terms = ""){
+								var presidents_table_html = presidents_table_html_start;
+								var matched = 0;
+								$.each(search, function(id, html){
+									if(id.includes(search_terms)){
+										presidents_table_html += html;
+										matched += 1;
+									}
+								});
+								
+								if (matched == 0){
+									presidents_table_html += '<tr id="no_matches"><td colspan=4>No Matches</td></tr>';
+								}
+								$('#presidents_table').html(presidents_table_html + '</table>');
+							}
+
+							// D3 csv
+							var search = {};
+							d3.csv("https://raw.githubusercontent.com/destination4debabrata/CUNY-Assignments/master/DATA%20608%2001%5B46846%5D/module5/data/presidents.csv").then(function(data) {
+								var presidents_table_html = presidents_table_html_start;
+								data.forEach(function(row) {
+									var bmi = Math.round(row['Weight']/Math.pow(row['Height'], 2) * 703 ,1);
+									var id = row['Name'].toLowerCase();
+									var html = "<tr id='"+id+"' class='filterable'><td>" + row['Name'] + '</td><td>' + row['Height'] + '</td><td>' + row['Weight'] + '</td><td>' + bmi  + '</td></tr>';
+									presidents_table_html += html;
+									search[id] = html;
+								});
+								$('#presidents_table').html(presidents_table_html + '</table>');
+							});
+
+							// Search Function
+							$('#search_text').keyup(function(){
+								var search_terms = $(this).val().toLowerCase();
+								update_president_table(search, search_terms);                        
+							});
+						});
+					</script>
+				</body>
+    <br>
+    <br>
+</html>
